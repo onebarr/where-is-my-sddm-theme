@@ -220,8 +220,8 @@ Rectangle {
 
         TextInput {
             id: passwordInput
-            width: parent.width*(config.realValue("passwordInputWidth") || 0.5)
-            height: 200/96*passwordFontSize
+            width: config.intValue("passwordInputFixedWidth") || parent.width*(config.realValue("passwordInputWidth") || 0.5)
+            height: config.intValue("passwordInputFixedHeight") || 200/96*passwordFontSize
             font.pointSize: passwordFontSize
             font.bold: true
             font.letterSpacing: 20/96*passwordFontSize
@@ -241,9 +241,16 @@ Rectangle {
             cursorVisible: config.boolValue("passwordInputCursorVisible")
             onAccepted: {
                 if (text != "" || config.boolValue("passwordAllowEmpty")) {
-                    sddm.login(userModel.data(userModel.index(currentUsersIndex, 0), usernameRole)
- || "123test", text, currentSessionsIndex);
+                    sddm.login(userModel.data(userModel.index(currentUsersIndex, 0), usernameRole) || "123test", text, currentSessionsIndex);
                 }
+            }
+            Text {
+                anchors.centerIn: parent
+                text: config.stringValue("passwordPlaceholderText") || "Enter Password"
+                color: config.stringValue("passwordTextColor") || textColor
+                opacity: 1
+                font: passwordInput.font
+                visible: passwordInput.text.length === 0
             }
             Rectangle {
                 z: -1
